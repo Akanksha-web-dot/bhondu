@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Birthday Mission</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+font-family:'Poppins',sans-serif;
+background:black;
+overflow:hidden;
+color:white;
+}
+
+/* BACKGROUND */
+
+body::before{
+content:'';
+position:fixed;
+width:100%;
+height:100%;
+background:
+linear-gradient(rgba(0,0,0,0.75),rgba(0,0,0,0.75)),
+url('https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1600&auto=format&fit=crop');
+
+background-size:cover;
+background-position:center;
+z-index:-2;
+filter:blur(2px);
+}
+
+/* SCANLINES */
+
+body::after{
+content:'';
+position:fixed;
+width:100%;
+height:100%;
+background:
+linear-gradient(transparent 95%, rgba(0,255,255,0.08) 100%);
+background-size:100% 4px;
+z-index:-1;
+pointer-events:none;
+}
+
+.page{
+position:absolute;
+width:100%;
+height:100vh;
+display:none;
+justify-content:center;
+align-items:center;
+flex-direction:column;
+padding:20px;
+text-align:center;
+overflow-y:auto;
+}
+
+.active{
+display:flex;
+}
+
+h1{
+font-family:'Orbitron',sans-serif;
+font-size:3rem;
+margin-bottom:20px;
+color:#00e5ff;
+text-shadow:0 0 20px #00e5ff;
+}
+
+.subtitle{
+max-width:700px;
+line-height:1.8;
+margin-bottom:25px;
+}
+
+/* BUTTON */
+
+button{
+padding:15px 35px;
+border:none;
+border-radius:50px;
+background:linear-gradient(45deg,#00e5ff,#ff00ff);
+color:white;
+font-weight:bold;
+cursor:pointer;
+margin:15px;
+transition:0.3s;
+font-size:1rem;
+}
+
+button:hover{
+transform:scale(1.08);
+}
+
+/* INPUT */
+
+input{
+padding:15px;
+width:250px;
+border:none;
+border-radius:30px;
+text-align:center;
+font-size:1rem;
+}
+
+/* INTRO */
+
+.loading{
+width:300px;
+height:20px;
+background:#111827;
+border-radius:20px;
+overflow:hidden;
+margin-top:20px;
+}
+
+.bar{
+height:100%;
+width:0%;
+background:linear-gradient(90deg,#00e5ff,#ff00ff);
+animation:load 4s forwards;
+}
+
+@keyframes load{
+100%{
+width:100%;
+}
+}
+
+/* YES NO */
+
+.choice-buttons{
+display:flex;
+gap:20px;
+position:relative;
+}
+
+#noBtn{
+position:relative;
+}
+
+/* SLIDESHOW */
+
+.slider{
+position:relative;
+width:90%;
+max-width:850px;
+height:500px;
+overflow:hidden;
+border-radius:30px;
+box-shadow:0 0 40px rgba(0,229,255,0.3);
+}
+
+.slide{
+position:absolute;
+width:100%;
+height:100%;
+opacity:0;
+animation:fade 16s infinite;
+}
+
+.slide img{
+width:100%;
+height:100%;
+object-fit:cover;
+}
+
+.slide:nth-child(1){
+animation-delay:0s;
+}
+
+.slide:nth-child(2){
+animation-delay:4s;
+}
+
+.slide:nth-child(3){
+animation-delay:8s;
+}
+
+.slide:nth-child(4){
+animation-delay:12s;
+}
+
+@keyframes fade{
+
+0%{
+opacity:0;
+transform:scale(1.08);
+}
+
+10%{
+opacity:1;
+}
+
+25%{
+opacity:1;
+}
+
+35%{
+opacity:0;
+}
+
+100%{
+opacity:0;
+}
+
+}
+
+/* VIDEO */
+
+video{
+width:90%;
+max-width:900px;
+border-radius:30px;
+margin-top:20px;
+box-shadow:0 0 40px rgba(255,0,255,0.3);
+}
+
+/* QUIZ */
+
+.quiz-box{
+background:rgba(255,255,255,0.08);
+padding:40px;
+border-radius:30px;
+backdrop-filter:blur(10px);
+max-width:700px;
+}
+
+.option{
+background:#111827;
+padding:15px;
+margin:15px;
+border-radius:20px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.option:hover{
+transform:scale(1.03);
+background:#00e5ff33;
+}
+
+/* LETTER */
+
+.letter{
+background:rgba(255,255,255,0.08);
+padding:40px;
+border-radius:30px;
+line-height:2;
+max-width:850px;
+backdrop-filter:blur(10px);
+}
+
+/* FINAL */
+
+.final{
+font-size:4rem;
+animation:glow 2s infinite alternate;
+}
+
+@keyframes glow{
+
+from{
+text-shadow:0 0 10px #00e5ff;
+}
+
+to{
+text-shadow:0 0 40px #ff00ff;
+}
+
+}
+
+/* ACHIEVEMENT */
+
+.achievement{
+margin-top:20px;
+padding:15px 25px;
+background:#111827;
+border-radius:20px;
+animation:pop 1s infinite alternate;
+}
+
+@keyframes pop{
+
+from{
+transform:scale(1);
+}
+
+to{
+transform:scale(1.05);
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- AUDIO -->
+
+<audio autoplay loop>
+
+<source src="song.mp3" type="audio/mp3">
+
+</audio>
+
+<!-- INTRO -->
+
+<section id="intro" class="page active">
+
+<h1>INITIALIZING BIRTHDAY DATABASE...</h1>
+
+<div class="loading">
+<div class="bar"></div>
+</div>
+
+<p class="subtitle">
+Accessing legendary memories...
+</p>
+
+</section>
+
+<!-- PASSWORD -->
+
+<section id="passwordPage" class="page">
+
+<h1>ACCESS REQUIRED 🔐</h1>
+
+<p class="subtitle">
+Only one chaotic idiot can enter.
+</p>
+
+<input type="password" id="password" placeholder="Enter Password">
+
+<button onclick="checkPassword()">
+ENTER
+</button>
+
+</section>
+
+<!-- YES NO -->
+
+<section id="choicePage" class="page">
+
+<h1>ARE YOU READY FOR THIS MISSION? 🎮</h1>
+
+<div class="choice-buttons">
+
+<button onclick="openPage('memoryPage')">
+YES
+</button>
+
+<button id="noBtn">
+NO
+</button>
+
+</div>
+
+</section>
+
+<!-- MEME -->
+
+<section id="memePage" class="page">
+
+<h1>WRONG CHOICE 💀</h1>
+
+<img src="https://media.tenor.com/7oKI8SKh1-AAAAAM/cat-cat-meme.gif"
+width="300">
+
+<button onclick="openPage('choicePage')">
+TRY AGAIN
+</button>
+
+</section>
+
+<!-- MEMORIES -->
+
+<section id="memoryPage" class="page">
+
+<h1>CORE MEMORIES ✨</h1>
+
+<div class="slider">
+
+<div class="slide">
+<img src="photo1.jpg">
+</div>
+
+<div class="slide">
+<img src="photo2.jpg">
+</div>
+
+<div class="slide">
+<img src="photo3.jpg">
+</div>
+
+<div class="slide">
+<img src="photo4.jpg">
+</div>
+
+</div>
+
+<button onclick="openPage('videoPage')">
+NEXT MISSION
+</button>
+
+</section>
+
+<!-- VIDEO -->
+
+<section id="videoPage" class="page">
+
+<h1>CINEMATIC ARCHIVE 🎬</h1>
+
+<video controls autoplay>
+
+<source src="video.mp4" type="video/mp4">
+
+</video>
+
+<button onclick="openPage('quizPage')">
+CONTINUE
+</button>
+
+</section>
+
+<!-- QUIZ -->
+
+<section id="quizPage" class="page">
+
+<div class="quiz-box">
+
+<h1>BESTFRIEND QUIZ 🎮</h1>
+
+<h2 id="question">
+Who is more chaotic?
+</h2>
+
+<div class="option" onclick="nextQuestion()">
+A) You
+</div>
+
+<div class="option" onclick="nextQuestion()">
+B) Definitely You
+</div>
+
+<div class="achievement">
+Achievement Unlocked: Chaos Expert
+</div>
+
+</div>
+
+</section>
+
+<!-- LETTER -->
+
+<section id="letterPage" class="page">
+
+<div class="letter">
+
+<h1>MESSAGE FOR YOU 💌</h1>
+
+<p>
+
+Happy Birthday to one of my favorite humans ever.<br><br>
+
+Thank you for every random joke,
+every late night conversation,
+every stupid argument,
+every gaming moment,
+and every memory that made life better.<br><br>
+
+You genuinely deserve happiness,
+success,
+peace,
+and unlimited GTA wins 🎮✨<br><br>
+
+Thank you for being part of my story.
+
+</p>
+
+</div>
+
+<button onclick="openPage('finalPage')">
+FINAL MISSION
+</button>
+
+</section>
+
+<!-- FINAL -->
+
+<section id="finalPage" class="page">
+
+<h1 class="final">
+MISSION COMPLETE 🎉
+</h1>
+
+<p class="subtitle">
+Another legendary year unlocked.
+</p>
+
+<button onclick="celebrate()">
+CELEBRATE
+</button>
+
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+
+/* INTRO */
+
+setTimeout(()=>{
+
+openPage('passwordPage');
+
+},4000);
+
+/* PAGE SWITCH */
+
+function openPage(id){
+
+document.querySelectorAll('.page')
+.forEach(page=>page.classList.remove('active'));
+
+document.getElementById(id)
+.classList.add('active');
+
+}
+
+/* PASSWORD */
+
+function checkPassword(){
+
+let pass=document.getElementById('password').value;
+
+if(pass==="bestie"){
+
+openPage('choicePage');
+
+}
+else{
+
+alert("ACCESS DENIED 💀");
+
+}
+
+}
+
+/* NO BUTTON */
+
+const noBtn=document.getElementById('noBtn');
+
+noBtn.addEventListener('mouseover',()=>{
+
+const x=Math.random()*300-150;
+const y=Math.random()*300-150;
+
+noBtn.style.transform=
+`translate(${x}px,${y}px)`;
+
+});
+
+noBtn.addEventListener('click',()=>{
+
+openPage('memePage');
+
+});
+
+/* QUIZ */
+
+function nextQuestion(){
+
+openPage('letterPage');
+
+}
+
+/* CONFETTI */
+
+function celebrate(){
+
+confetti({
+particleCount:400,
+spread:180,
+origin:{y:0.6}
+});
+
+}
+
+</script>
+
+</body>
+</html>

@@ -42,6 +42,58 @@ z-index:-2;
 filter:blur(2px);
 }
 
+/* LIVE PARTICLES */
+
+.particles{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+overflow:hidden;
+pointer-events:none;
+z-index:-1;
+}
+
+.particles::before,
+.particles::after{
+content:'';
+position:absolute;
+width:200%;
+height:200%;
+
+background-image:
+radial-gradient(#00e5ff 1px, transparent 1px),
+radial-gradient(#ff00ff 1px, transparent 1px),
+radial-gradient(#ffffff 1px, transparent 1px);
+
+background-size:
+120px 120px,
+180px 180px,
+250px 250px;
+
+animation:particlesMove 20s linear infinite;
+
+opacity:0.3;
+}
+
+.particles::after{
+animation-duration:35s;
+opacity:0.15;
+}
+
+@keyframes particlesMove{
+
+from{
+transform:translateY(0);
+}
+
+to{
+transform:translateY(-500px);
+}
+
+}
+
 /* PAGE */
 
 .page{
@@ -55,6 +107,8 @@ flex-direction:column;
 padding:20px;
 text-align:center;
 overflow-y:auto;
+transition:0.6s;
+opacity:1;
 }
 
 .active{
@@ -133,10 +187,34 @@ transition:0.3s;
 background:linear-gradient(45deg,#00e5ff,#ff00ff);
 color:white;
 box-shadow:0 0 25px rgba(0,229,255,0.5);
+animation:buttonPulse 2s infinite;
 }
 
 button:hover{
 transform:scale(1.08);
+
+box-shadow:
+0 0 20px #00e5ff,
+0 0 40px #ff00ff,
+0 0 60px #00e5ff;
+}
+
+@keyframes buttonPulse{
+
+0%{
+box-shadow:0 0 10px #00e5ff;
+}
+
+50%{
+box-shadow:
+0 0 25px #ff00ff,
+0 0 40px #00e5ff;
+}
+
+100%{
+box-shadow:0 0 10px #00e5ff;
+}
+
 }
 
 /* INPUT */
@@ -166,8 +244,6 @@ justify-content:center;
 align-items:center;
 }
 
-/* EACH SLIDE */
-
 .slide{
 position:absolute;
 width:100%;
@@ -179,8 +255,6 @@ opacity:0;
 animation:fade 24s infinite;
 }
 
-/* FULL IMAGE VISIBLE */
-
 .slide img{
 max-width:100%;
 max-height:100%;
@@ -189,8 +263,6 @@ height:auto;
 object-fit:contain;
 border-radius:20px;
 }
-
-/* 6 PHOTO TIMINGS */
 
 .slide:nth-child(1){
 animation-delay:0s;
@@ -215,8 +287,6 @@ animation-delay:16s;
 .slide:nth-child(6){
 animation-delay:20s;
 }
-
-/* ANIMATION */
 
 @keyframes fade{
 
@@ -313,13 +383,14 @@ text-shadow:0 0 40px #ff00ff;
 
 <body>
 
+<div class="particles"></div>
+
 <!-- BACKGROUND MUSIC -->
 
 <audio id="bgMusic" loop>
-
 <source src="song.mp3" type="audio/mp3">
-
 </audio>
+
 <!-- INTRO -->
 
 <section id="intro" class="page active">
@@ -334,6 +405,7 @@ ACCESSING AADIII DATABASE...
 > DETECTING PLAYER: AADIII 🎮<br>
 > AGE UPDATE INSTALLED: 19 YEARS OLD 🎂<br>
 > WARNING: HUMOUR LEVELS EXTREMELY HIGH 😭<br>
+> GYM ADDICTION DETECTED 💪<br>
 > SLEEPING DURING EXAM PREP DETECTED 😴<br>
 > SCANNING FIRST YEAR ENGINEERING SURVIVAL...<br><br>
 
@@ -384,19 +456,23 @@ AGE: 19 🎂<br>
 ROLE: Responsible boiee of the trio 💪<br>
 SPECIAL SKILL: Sleeping before exams and still scoring good marks 😭<br>
 WEAKNESS: Goes to extremes of all the things 💀<br>
+HUMOUR LEVEL: Illegal 😭<br><br>
+
 MEME ANALYSIS:<br>
+
 > Bro sleeps peacefully while syllabus cries 😭<br>
 > Somehow gets marks with zero visible preparation 💀<br>
 > Thinks gym first, responsibilities later but body not supporting 💪<br>
 > Certified engineering survivor 🎮<br><br>
+
 BIRTHDAY MESSAGE:<br>
 Happiest Birthdayyy AADIII💛🎂✨<br>
 Hope your year is full of:
 less procrastination,
 better sleep schedule,
-good health less regrets<<<more adventure,
+good health less regrets<<<more adventure  
 and fewer last-night study sessions 😭
-NOTE💀:-U R TOTALLY OURS MAN !!! HAMSE BACHNA IS EMPOSSIBLE 🥳                          
+NOTE💀:-U R TOTALLY OURS MAN !!! HAMSE BACHNA IS EMPOSSIBLE 🥳
 
 </div>
 
@@ -406,7 +482,7 @@ CONTINUE MISSION 🎮
 
 </section>
 
-<!-- YES NO -->
+<!-- CHOICE -->
 
 <section id="choicePage" class="page">
 
@@ -421,6 +497,9 @@ This mission contains:
 
 😭 emotional damage<br>
 💀 engineering trauma<br>
+🍔 Saddha food obsession<br>
+👶 Akku mentally being 11<br>
+💪 Aadiii sleep addiction during exams<br>
 🎮 chaotic trio memories
 
 </p>
@@ -489,7 +568,8 @@ CORE MEMORY ARCHIVE ✨
 
 <div class="slide">
 <img src="photo6.jpeg">
-</div>  
+</div>
+
 </div>
 
 <button onclick="openPage('videoPage')">
@@ -622,11 +702,33 @@ CELEBRATE 🎂
 
 function openPage(id){
 
-document.querySelectorAll('.page')
-.forEach(page=>page.classList.remove('active'));
+const currentPage =
+document.querySelector('.page.active');
 
-document.getElementById(id)
-.classList.add('active');
+if(currentPage){
+
+currentPage.style.opacity = 0;
+
+setTimeout(()=>{
+
+currentPage.classList.remove('active');
+
+const nextPage =
+document.getElementById(id);
+
+nextPage.classList.add('active');
+
+nextPage.style.opacity = 0;
+
+setTimeout(()=>{
+
+nextPage.style.opacity = 1;
+
+},50);
+
+},400);
+
+}
 
 }
 
@@ -682,6 +784,8 @@ openPage('memePage');
 });
 
 /* QUIZ */
+
+<!-- REPLACE YOUR ENTIRE quizData ARRAY WITH THIS FULL VERSION -->
 
 const quizData = [
 
@@ -924,12 +1028,6 @@ confetti({
 particleCount:500,
 spread:180,
 origin:{y:0.6}
-function celebrate(){
-
-confetti({
-particleCount:500,
-spread:180,
-origin:{y:0.6}
 });
 
 setTimeout(()=>{
@@ -940,11 +1038,12 @@ alert("THE END?\n\nnah.\nmore chaos coming soon 😭🎮");
 
 }
 
-/* BACKGROUND MUSIC START */
+/* BACKGROUND MUSIC */
 
 document.body.addEventListener('click', () => {
 
-const music = document.getElementById('bgMusic');
+const music =
+document.getElementById('bgMusic');
 
 music.play();
 
